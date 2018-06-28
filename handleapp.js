@@ -6,7 +6,7 @@ function isJson(str) {
     }
 }
 //Declarations
-var srcstr,tarstr,flowname,newflowid,stepcount,oldflow,oldflowid,currstep,oldjid,ind,repid,stepid,newvalue;
+var srcstr,tarstr,flowname,newflowid,stepcount,newappid,oldflow,oldflowid,currstep,oldjid,ind,repid,stepid,newvalue;
 var newstepids=[];
 var oldstepids=[];
 var newjids=[];
@@ -18,6 +18,8 @@ process.argv.forEach(function (val, index, array) {
   tarstr=val;
   if(index==4)
   flowname=val;
+  if(index==5)
+newappid=val;
 });
 const {Pool,Client} = require('pg');
 const Query=require('pg').Query;
@@ -36,7 +38,7 @@ src_client.connect((err)=>{
   {
     console.log('flow name is +'+flowname+'+ and client is connected');
     //getting flow id from source database using flow name in command line args
-    oldflow=src_client.query("select id,applicationid from flows where id=(select flow_id from flow_texts where name=$1::text)",[flowname],function(err,mainresult){
+    oldflow=src_client.query("select id from flows where id=(select flow_id from flow_texts where name=$1::text)",[flowname],function(err,mainresult){
     if(err)
     {
         console.log('error while getting flow id from src db '+err);
@@ -57,7 +59,7 @@ src_client.connect((err)=>{
         console.log('old flow id is '+oldflowid);
         tar_client.connect();//connecting to target client
         //Inserting the flow instance to flows table of target db
-        tar_client.query("Insert into flows(applicationid) values("+mainresult.rows[0].applicationid+")",function(err,result){
+        tar_client.query("insert into flows(applicationid) values("+newappid+")",function(err,result){
         if(err)
         {
         console.log("error in inserting flow");
