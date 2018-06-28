@@ -214,8 +214,8 @@ src_client.connect((err)=>{
                     function manageJumps(){
                         for(var n=0;n<newjids.length;n++)
                     {
-                         //console.log('Flow Inserted');
-                         //console.log('The step ids that should be updated are '+newstepids[newjids[n]]);
+                         console.log('Flow Inserted');
+                         console.log('The step ids that should be updated are '+newstepids[newjids[n]]);
                           fetchexid(n).then(updatestepid(stepid,newvalue));
                           new Promise(function(n)
                           {
